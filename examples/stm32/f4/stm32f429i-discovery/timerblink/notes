@@ -1,0 +1,14 @@
+10 reps -> 20 s -> 2s/rep
+P\ Indique cuál modo de GPIO está siendo utilizado por el pin PB13
+
+P\ Indiqué a qué periférico está asignado el pin PB13 con la función gpio_set_af
+
+    /* Set GPIOB13 as AF1 */
+    gpio_set_af(LGREENB_PORT, GPIO_AF1, LGREENB);
+
+	/* Set GPIO13 (in GPIO port B) to 'alternate function push-pull'. */
+	gpio_mode_setup(LGREENB_PORT, GPIO_MODE_AF,
+                    GPIO_PUPD_NONE, LGREENB);
+
+84MHz/256/FCNT = 2*PCLK/(TIMPRESC+1) (PCLK = APB2 for TIM1)
+timepresc=4096
