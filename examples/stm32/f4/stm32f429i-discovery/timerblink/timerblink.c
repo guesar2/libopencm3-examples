@@ -140,17 +140,15 @@ static void tim_setup(void)
 	 * might not be the raw APB1/APB2 clocks.  In various conditions they
 	 * are doubled.  See the Reference Manual for full details!
 	 */
-	//timer_set_prescaler(TIM1, 0xFFFF); // 2563Hz clk
-	timer_set_prescaler(TIM1, 4096);
+	timer_set_prescaler(TIM1, 0x00FF); // 2563Hz clk
     //timer_set_repetition_counter(TIM1, 15);
     timer_disable_preload(TIM1);
     timer_continuous_mode(TIM1);
     /* Count period */
-	//timer_set_period(TIM1, 2563);
-	timer_set_period(TIM1, 2563);
-	//timer_set_period(TIM1, 2 * rcc_apb2_frequency / (0xFFFF + 1));
+	timer_set_period(TIM1, 13122);
+
 	/* Set the initual output compare value for OC1. */
-	timer_set_oc_value(TIM1, TIM_OC1, 1282); // no usar los negativos
+	timer_set_oc_value(TIM1, TIM_OC1, 1312); // no usar los negativos
 
     /* Disable outputs. */
     //timer_enable_oc_output(TIM1, TIM_OC1);
@@ -207,12 +205,33 @@ int main(void)
 
 	/* Blink the LEDs (PG13 and PG14) on the board. */
 	while (1) {
-		/* Toggle LEDs. */
-		gpio_toggle(LGREENF_PORT, LGREENF);
-		for (i = 0; i < 6000000; i++) { /* Wait a bit. */
+		timer_set_oc_value(TIM1, TIM_OC1, 656);
+		for (i = 0; i < 2*21052631; i++) { /* Wait a bit. */
 			__asm__("nop");
 		}
+		timer_set_oc_value(TIM1, TIM_OC1, 722);
+		for (i = 0; i < 1 * 21052631; i++) { /* Wait a bit. */
+			__asm__("nop");
+		}
+		timer_set_oc_value(TIM1, TIM_OC1, 1312);
+		for (i = 0; i < 3 * 21052631; i++) { /* Wait a bit. */
+			__asm__("nop");
+		}
+		timer_set_oc_value(TIM1, TIM_OC1, 984);
+		for (i = 0; i < 1 * 21052631; i++) { /* Wait a bit. */
+			__asm__("nop");
+		}
+		timer_set_oc_value(TIM1, TIM_OC1, 722);
+		for (i = 0; i < 5 * 21052631; i++) { /* Wait a bit. */
+			__asm__("nop");
+		}
+		/* Toggle LEDs. */
+		//gpio_toggle(LGREENF_PORT, LGREENF);
+		//for (i = 0; i < 6000000; i++) { /* Wait a bit. */
+		//	__asm__("nop");
+		//}
 	}
 
 	return 0;
 }
+
